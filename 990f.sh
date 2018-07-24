@@ -13,7 +13,7 @@ cat 010f.sh.out                                |
 awk -v FROM="$FROM" 'BEGIN {
                      }
                      {
-                       printf("copy %c%s\\%s%c\n", 34, FROM, $0, 34);
+                       printf("copy /y /v %c%s\\%s%c\n", 34, FROM, $0, 34);
                      }'                        > left.txt
 
 cat $LAST                                      |
