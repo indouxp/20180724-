@@ -1,0 +1,5 @@
+*.out
+*.diff
+*.lst
+*.txt
+*.bat
