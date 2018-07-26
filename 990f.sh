@@ -1,8 +1,8 @@
 #!/bin/sh
 # copyコマンドのリストを作成
 
-FROM='W:\\prjs\\sasak\\from folder'
-TO='W:\\prjs\\sasak\\to folder'
+FROM='W:\\prjs\\sasak\\20180724-\\from folder'
+TO='W:\\prjs\\sasak\\20180724-\\to folder'
 
 for FILE in *f.sh.out
 do
@@ -11,34 +11,48 @@ done
 
 cat 010f.sh.out                                |
 awk -v FROM="$FROM" 'BEGIN {
+                       system("cat /dev/null > exclusionByExtension.txt"); 
                      }
                      {
-                       printf("copy /y /v %c%s\\%s%c\n", 34, FROM, $0, 34);
+                       if ($0 ~ /\.ashx *$/ ||
+                           $0 ~ /\.asmx *$/ ||
+                           $0 ~ /\.json *$/ ||
+                           $0 ~ /\.soap *$/ ||
+                           $0 ~ /\.svc *$/  ||
+                           $0 ~ /\.xamlx *$/) {
+                         printf("%s\n", $0) >> "exclusionByExtension.txt";
+                         next;
+                       }
+                       gsub(/%/, "%%");        # %をエスケープ
+                       printf("\n");
+                       printf("    copy /v %c%s\\%s%c\n", 34, FROM, $0, 34);
+                       printf("    if %%errorlevel%% neq 0 (echo E01:copy fail: %s)\n", $0);
+                       printf("\n");
+                       printf("    echo E02:duplicate: %s\\%s\n", FROM, $0);
+                       printf("\n");
                      }'                        > left.txt
 
 cat $LAST                                      |
 awk -v TO="$TO" 'BEGIN {
                  }
                  {
+                   if ($0 ~ /\.ashx *$/ ||
+                       $0 ~ /\.asmx *$/ ||
+                       $0 ~ /\.json *$/ ||
+                       $0 ~ /\.soap *$/ ||
+                       $0 ~ /\.svc *$/  ||
+                       $0 ~ /\.xamlx *$/) {
+                     next;
+                   }
+                   printf("if not exist %c%s\\%s%c (\n", 34, TO, $0, 34);
                    printf("%c%s\\%s%c\n", 34, TO, $0, 34);
+                   printf("\n");
+                   printf(") else (\n");
+                   printf("\n");
+                   printf(")\n");
                  }'                            > right.txt
 
 paste left.txt right.txt > out.txt
 
-echo "@echo off" >  copy-file.bat
-awk 'BEGIN{
-     }
-     {
-       if ($0 ~ /\.ashx *"$/ ||
-           $0 ~ /\.asmx *"$/ ||
-           $0 ~ /\.json *"$/ ||
-           $0 ~ /\.soap *"$/ ||
-           $0 ~ /\.svc *"$/  ||
-           $0 ~ /\.xamlx *"$/) {
-         next;
-       }
-       printf(": %04d\n", NR);
-       printf("%s\n", $0);
-       printf("if %%errorlevel%% neq 0 (echo E%04d)\n", NR);
-     }' out.txt |
-nkf -s -Lw -c   >> copy-file.bat                                 
+echo "@echo off" | nkf -s -Lw -c > copy-file.bat
+nkf -s -Lw -c out.txt            >> copy-file.bat                                 

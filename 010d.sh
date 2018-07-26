@@ -1,7 +1,7 @@
 #!/bin/sh
-# TOPフォルダパスの削除
+# ファイルフォーマット変換、キャラクタ変換、TOPフォルダパスの削除
 
-FROM='W:\\prjs\\sasak\\from folder\\'
+FROM='W:\\prjs\\sasak\\20180724-\\from folder\\'
 
 nkf -w -Lu -d find.d.lst           |
 sort                               |
