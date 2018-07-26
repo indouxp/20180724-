@@ -26,9 +26,9 @@ awk -v FROM="$FROM" 'BEGIN {
                        gsub(/%/, "%%");        # %をエスケープ
                        printf("\n");
                        printf("    copy /v %c%s\\%s%c\n", 34, FROM, $0, 34);
-                       printf("    if !errorlevel! neq 0 (echo E01:copy fail: %s)\n", $0);
+                       printf("    if !errorlevel! neq 0 (echo E01:copy fail: %c%s%c)\n", 34, $0, 34);
                        printf("\n");
-                       printf("    echo E02:duplicate: %s\\%s\n", FROM, $0);
+                       printf("    echo E02:duplicate: %c%s\\%s%c\n", 34, FROM, $0, 34);
                        printf("\n");
                      }'                        > left.txt
 
