@@ -1,6 +1,6 @@
 #!/bin/sh
 # mkdir コマンドのリストを作成
-TO='W:\\prjs\\sasak\\20180724-\\to folder'
+TO='W:\\prjs\\sasak2\\20180724-\\to folder'
 
 echo "@echo off" | nkf -s -Lw -c > md.bat
 

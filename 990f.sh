@@ -1,8 +1,8 @@
 #!/bin/sh
 # copyコマンドのリストを作成
 
-FROM='W:\\prjs\\sasak\\20180724-\\from folder'
-TO='W:\\prjs\\sasak\\20180724-\\to folder'
+FROM='W:\\prjs\\sasak2\\20180724-\\from folder'
+TO='W:\\prjs\\sasak2\\20180724-\\to folder'
 
 for FILE in *f.sh.out
 do
@@ -26,7 +26,7 @@ awk -v FROM="$FROM" 'BEGIN {
                        gsub(/%/, "%%");        # %をエスケープ
                        printf("\n");
                        printf("    copy /v %c%s\\%s%c\n", 34, FROM, $0, 34);
-                       printf("    if %%errorlevel%% neq 0 (echo E01:copy fail: %s)\n", $0);
+                       printf("    if !errorlevel! neq 0 (echo E01:copy fail: %s)\n", $0);
                        printf("\n");
                        printf("    echo E02:duplicate: %s\\%s\n", FROM, $0);
                        printf("\n");
@@ -54,5 +54,7 @@ awk -v TO="$TO" 'BEGIN {
 
 paste left.txt right.txt > out.txt
 
-echo "@echo off" | nkf -s -Lw -c > copy-file.bat
-nkf -s -Lw -c out.txt            >> copy-file.bat                                 
+echo "@echo off"                       | nkf -s -Lw -c >  copy-file.bat
+echo "setlocal enabledelayedexpansion" | nkf -s -Lw -c >> copy-file.bat
+cat out.txt                            | nkf -s -Lw -c >> copy-file.bat                                 
+
