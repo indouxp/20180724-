@@ -2,3 +2,5 @@
 *.diff
 *.lst
 *.txt
+copy-file.bat
+md.bat
