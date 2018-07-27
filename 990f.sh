@@ -45,7 +45,7 @@ awk -v TO="$TO" 'BEGIN {
                      next;
                    }
                    printf("if not exist %c%s\\%s%c (\n", 34, TO, $0, 34);
-                   printf("%c%s\\%s%c\n", 34, TO, $0, 34);
+                   printf("%c%s\\%s%c > nul\n", 34, TO, $0, 34);
                    printf("\n");
                    printf(") else (\n");
                    printf("\n");
